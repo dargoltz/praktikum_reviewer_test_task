@@ -239,4 +239,6 @@ class CashCalculator(Calculator):
             "eur": amount / self.EURO_RATE,
         }[currency]
 
+        # В этой реализации converted_amount также объявляется для наглядности - 
+        # в целях экономии памяти можно сразу сделать return {...}[currency]
         return converted_amount
