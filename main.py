@@ -106,7 +106,7 @@ class Calculator:
         date_a_week_ago = today - dt.timedelta(days=6)
 
         # Для наглядности список сохраняется в переменную - для экономии памяти вы можете передать его прямо в sum
-        # Условие date_a_week_ago < r.date <= today выглядит более компактно и наглядно
+        # Условие date_a_week_ago <= r.date <= today выглядит более компактно и наглядно
         last_week_records_amount = [r.amount for r in self.records if date_a_week_ago <= r.date <= today]
         return sum(last_week_records_amount)
 
@@ -130,7 +130,7 @@ class CaloriesCalculator(Calculator):
     """Калькулятор калорий"""
 
     def get_calories_remained(self) -> str:
-        """Получает остаток калорий на сегодня"""
+        """Возвращает остаток калорий на сегодня, если он не исчерпан/превышен"""
         today_stats = self.get_today_stats()
 
         if today_stats >= self.limit:
@@ -181,7 +181,7 @@ class CaloriesCalculator(Calculator):
 # 4. Необходимо предусмотреть ситуацию, когда введен некорректный тип валюты.
 # В хороших проектах используют прямые ограничения (например, перечисления из модуля enum).
 # Для простоты добавим множество поддерживаемых типов валют и будем проверять по нему.
-# 5. нет необходимости выполнять currency_type = currency - currency_type гарантированно определится в каждом варианте проверки
+# 5. Нет необходимости выполнять currency_type = currency - currency_type гарантированно определится в каждом варианте проверки
 # Помимо этого, можно сделать этап определения currency_type более явным, отделив его от остального кода 
 # (например, выбирая его при помощи отдельного dict[currency, currency_type]
 
@@ -211,7 +211,7 @@ class CashCalculator(Calculator):
         if today_stats == self.limit:
             return 'Денег нет, держись'
 
-        # переведем остаток в заданную валюту
+        # Переведем остаток в заданную валюту
         cash_remained = self._convert_cash(self.limit - today_stats, currency)
 
         # Переведем currency в корректный для вывода формат
@@ -228,7 +228,7 @@ class CashCalculator(Calculator):
         else:
             return f"Денег нет, держись: твой долг - {-cash_remained:.2f} {currency_type}"
 
-    # Этот метод не предназначен для прямого использования - отметим это, сделав его приватным (добавив "_" перед его названием)
+    # Этот метод не предназначен для прямого использования - обозначим это, сделав его приватным (добавив "_" перед его названием)
     def _convert_cash(self, amount: float, currency: str) -> float:
         """Переводит заданную сумму по курсу валют"""
         # Используем словарь-диспетчер - один из альтернативных вариантов конструкции if-elif-else
